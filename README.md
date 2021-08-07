@@ -3,7 +3,7 @@ Sequelize (ORM) manager for @storehouse/core.
 
 #### Note
 
-In case you are familiar with [sequelize], code in typescript and define your models by extending [Model](https://sequelize.org/master/class/lib/model.js~Model.html) class, we suggest you don't use this package as you will still need to import your models everytime. However we will still cover that case [here](#extending-model). 
+In case you are familiar with [sequelize], code in typescript and define your models by extending the class [Model](https://sequelize.org/master/class/lib/model.js~Model.html), we suggest you don't use this package as you will still need to import your models everytime. However we will still cover that case [here](#extending-model). 
 
 
 ## Add a manager
@@ -64,7 +64,7 @@ import {
 import Storehouse from '@storehouse/core';
 import { ModelSettings, SequelizeManager } from '@storehouse/sequelize';
 
-export interface MovieAttributes {
+interface MovieAttributes {
   id: number;
   title: string;
   rate?: number | null;
@@ -120,7 +120,8 @@ Storehouse.add({
   }
 });
 
-const Movies = Storehouse.getModel<ModelCtor<MovieInstance>>('movies');
+// retrieve a model
+const Movies = Storehouse.getModel<ModelCtor<MovieInstance>>('local', 'movies');
 if (Movies) {
   const newMovie: MovieCreationAttributes = {
     title: `Last Knight ${Math.ceil(Math.random() * 1000) + 1}`,
@@ -128,7 +129,15 @@ if (Movies) {
   };
   const r = await Movies.create(newMovie);
   console.log('added new movie', r.id, r.title);
-  console.log('nb movies', await Movies.count());
+}
+
+// or retrieve the manager
+const manager = Storehouse.getManager<SequelizeManager>('local');
+if(manager) {
+  // then retrieve the model as
+  manager.getModel<ModelCtor<MovieInstance>>('movies');
+  // or
+  manager.getModel<MovieInstance>('movies');
 }
 ```
 
@@ -195,7 +204,7 @@ const movieSchema: ModelAttributes<Movie, MovieAttributes> = {
 };
 
 const movieOptions: ModelOptions<Model<MovieAttributes, MovieCreationAttributes>> = {
-  // If "modelName" is not explicitly defined, 
+  // If "modelName" is not specified, 
   // it will be the name of the class extending Model ("Movie")
   modelName: 'movies', 
   tableName: 'movies'
@@ -222,14 +231,36 @@ Storehouse.add({
   }
 });
 
-const Movies = Storehouse.getModel<MovieCtor>('movies');
+
+// retrieve a model
+const Movies = Storehouse.getModel<MovieCtor>('local', 'movies');
 if (Movies) {
   const r = await Movies.createMovie('Movie title', 3);
   console.log('added new movie', r.fullTitle);
-  console.log('nb movies', await Movies.count());
 }
+
+// or retrieve the manager
+const manager = Storehouse.getManager<SequelizeManager>('local');
+if(manager) {
+  // then retrieve the model as
+  manager.getModel<MovieCtor>('movies');
+}
+```
+
+### SequelizeManager
+
+`SequelizeManager` extends the class [Sequelize](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html).
+
+Example:
+```ts
+await Storehouse.getManager<SequelizeManager>('local')?.sync();
+// or
+await Storehouse.getConnection<Sequelize>('local')?.sync();
+// or
+await Storehouse.getManager<SequelizeManager>('local')?.getConnection().sync();
 ```
 
 ## References
 
 - [Sequelize](http://sequelize.org/)
+- [@storehouse/core](https://www.npmjs.com/package/@storehouse/core)
