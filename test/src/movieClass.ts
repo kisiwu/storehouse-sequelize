@@ -31,6 +31,8 @@ export class Movie extends Model<MovieAttributes, MovieCreationAttributes> imple
   }
 }
 
+export type MovieCtor = typeof Movie & { new(): Movie };
+
 export const movieSchema: ModelAttributes<Movie, MovieAttributes> = {
   id: {
     type: DataTypes.INTEGER,

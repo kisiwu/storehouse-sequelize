@@ -43,13 +43,18 @@ export interface SequelizeManagerArg extends ManagerArg {
  * @param modelName Model name
  * @returns 
  */
-export function getModel<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelCtor<M> {
+function getMdl<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelCtor<M>;
+function getMdl<M extends ModelCtor<Model> = ModelCtor<Model>>(registry: Registry, managerName: string, modelName?: string): M;
+function getMdl<TModelAttributes = typeof AnyJson, TCreationAttributes = typeof AnyJson>(registry: Registry, managerName: string, modelName?: string): ModelCtor<Model<TModelAttributes, TCreationAttributes>>;
+function getMdl<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelCtor<M> {
   const model = registry.getModel<ModelCtor<M>>(managerName, modelName);
   if (!model) {
     throw new ReferenceError(`Could not find model "${modelName || managerName}"`);
   }
   return model;
 }
+
+export const getModel = getMdl;
 
 export function getManager<M extends SequelizeManager = SequelizeManager>(registry: Registry, managerName?: string): M {
   const manager = registry.getManager<M>(managerName);
@@ -70,16 +75,12 @@ export function getConnection(registry: Registry, managerName?: string): Sequeli
   return conn;
 }
 
-export class SequelizeManager implements IManager {
-  static readonly type = '@storehouse/mongodb';
-
-  protected connection: Sequelize;
+export class SequelizeManager extends Sequelize implements IManager {
+  static readonly type = '@storehouse/sequelize';
 
   protected name: string;
 
   constructor(settings: SequelizeManagerArg) {
-    this.name = settings.name || `Sequelize ${Date.now()}_${Math.ceil(Math.random() * 10000) + 10}`;
-
     let options: Options = {};
 
     if (settings.config?.options) {
@@ -92,13 +93,15 @@ export class SequelizeManager implements IManager {
       options.logging = msg => Log.debug(`[${this.name}]`, msg);
     }
 
-    this.connection = new Sequelize(options);
+    super(options);
+
+    this.name = settings.name || `Sequelize ${Date.now()}_${Math.ceil(Math.random() * 10000) + 10}`;
 
     settings.config?.models?.forEach(m => {
       if (m.model && m.model.init) {
         const options = {
           ...m.options,
-          sequelize: this.connection
+          sequelize: this
         };
         if (!options.modelName) {
           options.modelName = m.model.name;
@@ -108,25 +111,26 @@ export class SequelizeManager implements IManager {
           options
         );
       } else if (m.options?.modelName){
-        this.connection.define(m.options.modelName, m.attributes, m.options);
+        this.define(m.options.modelName, m.attributes, m.options);
       }
     });
   }
 
   getConnection(): Sequelize {
-    return this.connection;
+    return this;
   }
 
   async closeConnection(): Promise<void> {
-    await this.connection.close();
+    await this.close();
   }
 
   /**
    * Fetch a Model which is already defined
    */
+  getModel<M extends ModelCtor<Model> = ModelCtor<Model>>(name: string): M;
   getModel<M extends Model = Model>(name: string): ModelCtor<M>;
   getModel<TModelAttributes = typeof AnyJson, TCreationAttributes = typeof AnyJson>(name: string): ModelCtor<Model<TModelAttributes, TCreationAttributes>>;
-  getModel<M extends Model = Model>(name: string): ModelCtor<M> {
-    return <ModelCtor<M>>(this.getConnection().model(name));
+  getModel<M extends ModelCtor<Model> = ModelCtor<Model>>(name: string): M {
+    return <M>(this.model(name));
   }
 }

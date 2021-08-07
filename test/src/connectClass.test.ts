@@ -1,7 +1,7 @@
 import Storehouse from '@storehouse/core';
-import { ModelCtor, Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import { SequelizeManager } from '../../src/index';
-import { MovieCreationAttributes, Movie, movieSettings } from './movieClass';
+import { MovieCtor, movieSettings } from './movieClass';
 
 import { Debug } from '@novice1/logger';
 Debug.enable('@storehouse/sequelize*');
@@ -41,7 +41,7 @@ describe('connect class', function () {
 
       const mysql = Storehouse.getManager<SequelizeManager>('mysql');
       if(mysql) {
-        const MoviesModel = mysql.getModel<Movie>('movies');
+        const MoviesModel = mysql.getModel<MovieCtor>('movies');
         if (MoviesModel) {
           // await MoviesModel.sync({ alter: true });
           const movies = await MoviesModel.findAll({ limit: 5 });
@@ -49,15 +49,10 @@ describe('connect class', function () {
         }
       }
 
-      const Movies = Storehouse.getModel<ModelCtor<Movie>>('movies');
+      const Movies = Storehouse.getModel<MovieCtor>('movies');
       if (Movies) {
-        const newMovie: MovieCreationAttributes = {
-          title: `Last Knight ${Math.ceil(Math.random() * 1000) + 1}`
-        };
-        newMovie.rate = 3;
-        const r = await Movies.create(newMovie);
-        logger.info('added new movie', r.id, r.title);
-  
+        const r = await Movies.createMovie(`Last Knight ${Math.ceil(Math.random() * 1000) + 1}`, 3);
+        logger.info('added new movie', r.displayName);
         await r.destroy();
         logger.info('deleted movie');
   
