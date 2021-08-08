@@ -1,9 +1,8 @@
-import Storehouse from '@storehouse/core';
-import { Sequelize } from 'sequelize';
-import { SequelizeManager } from '../../src/index';
-import { MovieCtor, movieSettings } from './movieClass';
+const Storehouse = require('@storehouse/core');
+const { SequelizeManager } = require('../../lib/index');
+const { movieSettings } = require('./movieClass');
 
-import { Debug } from '@novice1/logger';
+const { Debug } = require('@novice1/logger');
 Debug.enable('@storehouse/sequelize*');
 
 describe('connect class', function () {
@@ -33,23 +32,34 @@ describe('connect class', function () {
         }
       });
 
-      const conn = await Storehouse.getConnection<Sequelize>();
+      /**
+       * @type {import('sequelize').Sequelize}
+       */
+      const conn = await Storehouse.getConnection();
       if (conn) {
         // await conn.sync({force: true});
         logger.info('connected to database', conn.config.database);
       }
 
-      const mysql = Storehouse.getManager<SequelizeManager>('mysql');
+      /**
+       * @type {import('../../lib/index').SequelizeManager}
+       */
+      const mysql = Storehouse.getManager('mysql');
       if(mysql) {
-        const MoviesModel = mysql.getModel<MovieCtor>('movies');
+        /**
+         * @type {typeof import('./movieClass').Movie}
+         */
+        const MoviesModel = mysql.getModel('movies');
         if (MoviesModel) {
-          // await MoviesModel.sync({ alter: true });
           const movies = await MoviesModel.findAll({ limit: 5 });
           logger.info('nb movies:', `${movies.length}`);
         }
       }
 
-      const Movies = Storehouse.getModel<MovieCtor>('movies');
+      /**
+       * @type {typeof import('./movieClass').Movie}
+       */
+      const Movies = Storehouse.getModel('movies');
       if (Movies) {
         const r = await Movies.createMovie(`Last Knight ${Math.ceil(Math.random() * 1000) + 1}`, 3);
         logger.info('added new movie', r.displayName);

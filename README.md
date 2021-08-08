@@ -3,7 +3,7 @@ Sequelize (ORM) manager for @storehouse/core.
 
 #### Note
 
-In case you are familiar with [sequelize], code in typescript and define your models by extending the class [Model](https://sequelize.org/master/class/lib/model.js~Model.html), we suggest you don't use this package as you will still need to import your models everytime. However we will still cover that case [here](#extending-model). 
+In case you are familiar with [sequelize](https://sequelize.org/), code in typescript and define your models by extending the class [Model](https://sequelize.org/master/class/lib/model.js~Model.html), we suggest you don't use this package as you will still need to import your models everytime. However we will still cover that case [here](#extending-model). 
 
 
 ## Add a manager
@@ -46,9 +46,15 @@ About **`config`**:
 
 ### Logging
 
+If you don't apply `logging` option, you can enable the default logs with the package [debug](https://www.npmjs.com/package/debug).
+```ts
+import debug from 'debug';
+debug.enable('@storehouse/sequelize*');
+```
+
 ## Model definition
 
-As for sequelize, there are 2 ways of defining models. We will give examples in typescript detailing most types but the same could be done in javascript.
+As for sequelize, there are 2 ways of defining models. We will give examples in typescript but the same could be done in javascript.
 
 ### Simple usage
 
@@ -162,8 +168,6 @@ interface MovieAttributes {
 
 type MovieCreationAttributes = Optional<MovieAttributes, 'id'>;
 
-type MovieCtor = typeof Movie & { new(): Movie };
-
 class Movie extends Model<MovieAttributes, MovieCreationAttributes> implements MovieAttributes {
   id!: number;
   title!: string;
@@ -181,6 +185,8 @@ class Movie extends Model<MovieAttributes, MovieCreationAttributes> implements M
     return [this?.id, this?.title].join(' ');
   }
 }
+
+type MovieCtor = typeof Movie & { new(): Movie };
 
 const movieSchema: ModelAttributes<Movie, MovieAttributes> = {
   id: {
@@ -249,7 +255,7 @@ if(manager) {
 
 ### SequelizeManager
 
-`SequelizeManager` extends the class [Sequelize](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html).
+`SequelizeManager` extends the class [Sequelize](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html), so you have access to its properties and methods.
 
 Example:
 ```ts
