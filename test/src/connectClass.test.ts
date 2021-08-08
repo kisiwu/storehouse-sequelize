@@ -2,6 +2,7 @@ import Storehouse from '@storehouse/core';
 import { Sequelize } from 'sequelize';
 import { SequelizeManager } from '../../src/index';
 import { MovieCtor, movieSettings } from './movieClass';
+import { userSettings } from './userClass';
 
 import { Debug } from '@novice1/logger';
 Debug.enable('@storehouse/sequelize*');
@@ -27,7 +28,8 @@ describe('connect class', function () {
               logging: false
             },
             models: [
-              movieSettings
+              movieSettings,
+              userSettings
             ]
           }
         }
