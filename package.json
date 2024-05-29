@@ -4,29 +4,29 @@
   "description": "Sequelize manager for @storehouse/core.",
   "main": "lib/index.js",
   "dependencies": {
-    "@novice1/logger": "^1.3.1",
-    "@storehouse/core": "^1.0.7",
-    "sequelize": "^6.6.5",
-    "tslib": "^2.3.0"
+    "@novice1/logger": "^1.4.0",
+    "@storehouse/core": "^1.1.1",
+    "sequelize": "^6.37.3",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.21",
-    "@types/mocha": "^9.0.0",
-    "@types/node": "^16.4.10",
-    "@typescript-eslint/eslint-plugin": "^4.28.5",
-    "@typescript-eslint/parser": "^4.28.5",
-    "eslint": "^7.32.0",
-    "kaukau": "^1.0.0",
-    "mysql2": "^2.2.5",
-    "ts-node": "^10.1.0",
-    "typedoc": "^0.21.5",
-    "typescript": "^4.3.5"
+    "@types/chai": "^4.3.16",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.12.12",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "eslint": "^9.3.0",
+    "kaukau": "^3.1.2",
+    "mysql2": "^3.9.8",
+    "ts-node": "^10.9.2",
+    "typedoc": "^0.25.13",
+    "typescript": "^5.4.5"
   },
   "scripts": {
     "doc": "typedoc",
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\", \"noUnusedParameters\": false}' kaukau --require ts-node/register --config kaukau-src.js",
+    "test": "kaukau --require ts-node/register --config kaukau-src.js",
     "testlib": "kaukau --config kaukau-lib.js"
   },
   "repository": {

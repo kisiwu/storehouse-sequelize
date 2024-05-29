@@ -55,6 +55,7 @@ describe('connect class', function () {
       if (Movies) {
         const r = await Movies.createMovie(`Last Knight ${Math.ceil(Math.random() * 1000) + 1}`, 3);
         logger.info('added new movie', r.displayName);
+        logger.log('nb current database movies', await Movies.count());
         await r.destroy();
         logger.info('deleted movie');
   

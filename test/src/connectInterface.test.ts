@@ -57,7 +57,7 @@ describe('connect interface', function () {
         newMovie.rate = 3;
         const r = await Movies.create(newMovie);
         logger.info('added new movie', r.id, r.title);
-  
+        logger.log('nb current database movies', await Movies.count());
         await r.destroy();
         logger.info('deleted movie');
   

@@ -45,7 +45,7 @@ export interface SequelizeManagerArg extends ManagerArg {
  */
 function getMdl<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelCtor<M>;
 function getMdl<M extends ModelCtor<Model> = ModelCtor<Model>>(registry: Registry, managerName: string, modelName?: string): M;
-function getMdl<TModelAttributes = typeof AnyJson, TCreationAttributes = typeof AnyJson>(registry: Registry, managerName: string, modelName?: string): ModelCtor<Model<TModelAttributes, TCreationAttributes>>;
+function getMdl<TModelAttributes extends Record<string, unknown> = typeof AnyJson, TCreationAttributes extends Record<string, unknown> = typeof AnyJson>(registry: Registry, managerName: string, modelName?: string): ModelCtor<Model<TModelAttributes, TCreationAttributes>>;
 function getMdl<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelCtor<M> {
   const model = registry.getModel<ModelCtor<M>>(managerName, modelName);
   if (!model) {
@@ -129,7 +129,7 @@ export class SequelizeManager extends Sequelize implements IManager {
    */
   getModel<M extends ModelCtor<Model> = ModelCtor<Model>>(name: string): M;
   getModel<M extends Model = Model>(name: string): ModelCtor<M>;
-  getModel<TModelAttributes = typeof AnyJson, TCreationAttributes = typeof AnyJson>(name: string): ModelCtor<Model<TModelAttributes, TCreationAttributes>>;
+  getModel<TModelAttributes extends Record<string, unknown> = typeof AnyJson, TCreationAttributes extends Record<string, unknown> = typeof AnyJson>(name: string): ModelCtor<Model<TModelAttributes, TCreationAttributes>>;
   getModel<M extends ModelCtor<Model> = ModelCtor<Model>>(name: string): M {
     return <M>(this.model(name));
   }
