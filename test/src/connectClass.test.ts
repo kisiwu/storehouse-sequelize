@@ -37,7 +37,7 @@ describe('connect class', function () {
 
       const conn = await Storehouse.getConnection<Sequelize>();
       if (conn) {
-        await conn.sync({force: true});
+        //await conn.sync({force: true});
         logger.info('connected to database', conn.config.database);
       }
 
