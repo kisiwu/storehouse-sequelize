@@ -1,6 +1,6 @@
 {
   "name": "@storehouse/sequelize",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Sequelize manager for @storehouse/core.",
   "main": "lib/index.js",
   "dependencies": {
