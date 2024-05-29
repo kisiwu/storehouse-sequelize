@@ -6,24 +6,20 @@ import {
   ModelAttributes, 
   ModelOptions,
   Options,
-  ModelCtor
+  ModelCtor,
+  ModelStatic
 } from 'sequelize';
 import Logger from '@novice1/logger';
 
 const Log = Logger.debugger('@storehouse/sequelize');
 const AnyJson = {}
 
-export type ModelInit<TModelAttributes extends typeof AnyJson = typeof AnyJson, TCreationAttributes extends typeof AnyJson = TModelAttributes> = { 
-  new(): Model<TModelAttributes, TCreationAttributes>;
-  init: typeof Model['init'];
-};
-
 export interface ModelSettings<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TModelAttributes extends typeof AnyJson = any, 
   TCreationAttributes extends typeof AnyJson = TModelAttributes> {
   attributes: ModelAttributes<Model<TModelAttributes, TCreationAttributes>, TModelAttributes>;
-  model?: ModelInit<TModelAttributes, TCreationAttributes>;
+  model?: ModelStatic<Model<TModelAttributes, TCreationAttributes>>;
   options?: ModelOptions<Model<TModelAttributes, TCreationAttributes>>;
 }
 
