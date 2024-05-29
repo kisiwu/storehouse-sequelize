@@ -1,5 +1,5 @@
 import Storehouse from '@storehouse/core';
-import { ModelCtor, Sequelize } from 'sequelize';
+import { ModelStatic, Sequelize } from 'sequelize';
 import { SequelizeManager } from '../../src/index';
 import { MovieCreationAttributes, MovieInstance, movieSettings } from './movieInterface';
 
@@ -49,7 +49,7 @@ describe('connect interface', function () {
         }
       }
 
-      const Movies = Storehouse.getModel<ModelCtor<MovieInstance>>('movies');
+      const Movies = Storehouse.getModel<ModelStatic<MovieInstance>>('movies');
       if (Movies) {
         const newMovie: MovieCreationAttributes = {
           title: `Last Knight ${Math.ceil(Math.random() * 1000) + 1}`

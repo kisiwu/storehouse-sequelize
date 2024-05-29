@@ -6,7 +6,6 @@ import {
   ModelAttributes, 
   ModelOptions,
   Options,
-  ModelCtor,
   ModelStatic
 } from 'sequelize';
 import Logger from '@novice1/logger';
@@ -39,11 +38,11 @@ export interface SequelizeManagerArg extends ManagerArg {
  * @param modelName Model name
  * @returns 
  */
-function getMdl<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelCtor<M>;
-function getMdl<M extends ModelCtor<Model> = ModelCtor<Model>>(registry: Registry, managerName: string, modelName?: string): M;
-function getMdl<TModelAttributes extends Record<string, unknown> = typeof AnyJson, TCreationAttributes extends Record<string, unknown> = typeof AnyJson>(registry: Registry, managerName: string, modelName?: string): ModelCtor<Model<TModelAttributes, TCreationAttributes>>;
-function getMdl<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelCtor<M> {
-  const model = registry.getModel<ModelCtor<M>>(managerName, modelName);
+function getMdl<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelStatic<M>;
+function getMdl<M extends ModelStatic<Model> = ModelStatic<Model>>(registry: Registry, managerName: string, modelName?: string): M;
+function getMdl<TModelAttributes extends Record<string, unknown> = typeof AnyJson, TCreationAttributes extends Record<string, unknown> = typeof AnyJson>(registry: Registry, managerName: string, modelName?: string): ModelStatic<Model<TModelAttributes, TCreationAttributes>>;
+function getMdl<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelStatic<M> {
+  const model = registry.getModel<ModelStatic<M>>(managerName, modelName);
   if (!model) {
     throw new ReferenceError(`Could not find model "${modelName || managerName}"`);
   }
@@ -123,10 +122,10 @@ export class SequelizeManager extends Sequelize implements IManager {
   /**
    * Fetch a Model which is already defined
    */
-  getModel<M extends ModelCtor<Model> = ModelCtor<Model>>(name: string): M;
-  getModel<M extends Model = Model>(name: string): ModelCtor<M>;
-  getModel<TModelAttributes extends Record<string, unknown> = typeof AnyJson, TCreationAttributes extends Record<string, unknown> = typeof AnyJson>(name: string): ModelCtor<Model<TModelAttributes, TCreationAttributes>>;
-  getModel<M extends ModelCtor<Model> = ModelCtor<Model>>(name: string): M {
+  getModel<M extends ModelStatic<Model> = ModelStatic<Model>>(name: string): M;
+  getModel<M extends Model = Model>(name: string): ModelStatic<M>;
+  getModel<TModelAttributes extends Record<string, unknown> = typeof AnyJson, TCreationAttributes extends Record<string, unknown> = typeof AnyJson>(name: string): ModelStatic<Model<TModelAttributes, TCreationAttributes>>;
+  getModel<M extends ModelStatic<Model> = ModelStatic<Model>>(name: string): M {
     return <M>(this.model(name));
   }
 }

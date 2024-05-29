@@ -62,7 +62,7 @@ As for sequelize, there are 2 ways of defining models. We will give examples in 
 import { 
   DataTypes, 
   Model,
-  ModelCtor, 
+  ModelStatic, 
   ModelAttributes, 
   ModelOptions, 
   Optional 
@@ -127,7 +127,7 @@ Storehouse.add({
 });
 
 // retrieve a model
-const Movies = Storehouse.getModel<ModelCtor<MovieInstance>>('local', 'movies');
+const Movies = Storehouse.getModel<ModelStatic<MovieInstance>>('local', 'movies');
 if (Movies) {
   const newMovie: MovieCreationAttributes = {
     title: `Last Knight ${Math.ceil(Math.random() * 1000) + 1}`,
@@ -141,7 +141,7 @@ if (Movies) {
 const manager = Storehouse.getManager<SequelizeManager>('local');
 if(manager) {
   // then retrieve the model as
-  manager.getModel<ModelCtor<MovieInstance>>('movies');
+  manager.getModel<ModelStatic<MovieInstance>>('movies');
   // or
   manager.getModel<MovieInstance>('movies');
 }

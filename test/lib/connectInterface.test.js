@@ -47,7 +47,7 @@ describe('connect interface', function () {
       const mysql = Storehouse.getManager('mysql');
       if(mysql) {
         /**
-         * @type {import('sequelize').ModelCtor<import('sequelize').Model<{
+         * @type {import('sequelize').ModelStatic<import('sequelize').Model<{
          * id: number;
          * title: string;
          * rate?: number | null;
@@ -70,7 +70,7 @@ describe('connect interface', function () {
       }
 
       /**
-         * @type {import('sequelize').ModelCtor<import('sequelize').Model<{
+         * @type {import('sequelize').ModelStatic<import('sequelize').Model<{
        * id: number;
        * title: string;
        * rate?: number | null;

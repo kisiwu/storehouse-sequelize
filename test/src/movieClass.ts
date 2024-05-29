@@ -1,9 +1,5 @@
 import { DataTypes, Model, ModelAttributes, ModelOptions, Optional  } from 'sequelize';
 import { ModelSettings } from '../../src';
-/*import {
-  ModelSettings
-} from '../../src/index'
-*/
 
 export interface MovieAttributes {
   id: number;
