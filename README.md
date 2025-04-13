@@ -3,7 +3,7 @@ Sequelize (ORM) manager for @storehouse/core.
 
 #### Note
 
-In case you are familiar with [sequelize](https://sequelize.org/), code in typescript and define your models by extending the class [Model](https://sequelize.org/master/class/lib/model.js~Model.html), we suggest you don't use this package as you will still need to import your models everytime. However we will still cover that case [here](#extending-model). 
+If you are already familiar with [sequelize](https://sequelize.org/), code in typescript and define your models by extending the class [Model](https://sequelize.org/master/class/lib/model.js~Model.html), we suggest you don't use this package as you will still need to import your models everytime. However we will still cover that case [here](#extending-model). 
 
 
 ## Add a manager
