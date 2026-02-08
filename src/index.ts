@@ -266,7 +266,7 @@ export function getConnection(registry: Registry, managerName?: string): Sequeli
  *
  * @extends HealthCheckResult
  */
-export interface SequelizeHealthCkeckResult extends HealthCheckResult {
+export interface SequelizeHealthCheckResult extends HealthCheckResult {
   /**
    * Detailed information about the Sequelize connection health.
    */
@@ -519,7 +519,7 @@ export class SequelizeManager extends Sequelize implements IManager {
    * }
    * ```
    */
-  async healthCheck(): Promise<SequelizeHealthCkeckResult> {
+  async healthCheck(): Promise<SequelizeHealthCheckResult> {
     const start = Date.now();
     const timestamp = start;
 
