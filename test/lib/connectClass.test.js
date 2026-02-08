@@ -1,4 +1,4 @@
-const Storehouse = require('@storehouse/core');
+const { Storehouse } = require('@storehouse/core');
 const { SequelizeManager } = require('../../lib/index');
 const { movieSettings } = require('./movieClass');
 
@@ -45,7 +45,7 @@ describe('connect class', function () {
        * @type {import('../../lib/index').SequelizeManager}
        */
       const mysql = Storehouse.getManager('mysql');
-      if(mysql) {
+      if (mysql) {
         /**
          * @type {typeof import('./movieClass').Movie}
          */
@@ -65,7 +65,7 @@ describe('connect class', function () {
         logger.info('added new movie', r.displayName);
         await r.destroy();
         logger.info('deleted movie');
-  
+
         logger.log('nb current database movies', await Movies.count());
       }
 
@@ -73,7 +73,7 @@ describe('connect class', function () {
       logger.info('closed connections');
 
       logger.info('Done');
-    } catch(e) {
+    } catch (e) {
       await Storehouse.destroy();
       logger.info('closed connections');
       throw e;

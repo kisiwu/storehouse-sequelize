@@ -9,7 +9,7 @@ If you are already familiar with [sequelize](https://sequelize.org/), code in ty
 ## Add a manager
 
 ```ts
-import Storehouse from '@storehouse/core';
+import { Storehouse } from '@storehouse/core';
 import { SequelizeManager } from '@storehouse/sequelize';
 
 // register
@@ -67,7 +67,7 @@ import {
   ModelOptions, 
   Optional 
 } from 'sequelize';
-import Storehouse from '@storehouse/core';
+import { Storehouse } from '@storehouse/core';
 import { ModelSettings, SequelizeManager } from '@storehouse/sequelize';
 
 interface MovieAttributes {
@@ -157,7 +157,7 @@ import {
   ModelOptions, 
   Optional  
 } from 'sequelize';
-import Storehouse from '@storehouse/core';
+import { Storehouse } from '@storehouse/core';
 import { ModelSettings, SequelizeManager } from '@storehouse/sequelize';
 
 interface MovieAttributes {

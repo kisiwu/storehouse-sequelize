@@ -1,4 +1,4 @@
-import Storehouse from '@storehouse/core';
+import { Storehouse } from '@storehouse/core';
 import { ModelStatic, Sequelize } from 'sequelize';
 import { SequelizeManager } from '../../src/index';
 import { MovieCreationAttributes, MovieInstance, movieSettings } from './movieInterface';
@@ -40,7 +40,7 @@ describe('connect interface', function () {
       }
 
       const mysql = Storehouse.getManager<SequelizeManager>('mysql');
-      if(mysql) {
+      if (mysql) {
         const MoviesModel = mysql.getModel<MovieInstance>('movies');
         if (MoviesModel) {
           // await MoviesModel.sync({ alter: true });
@@ -60,7 +60,7 @@ describe('connect interface', function () {
         logger.log('nb current database movies', await Movies.count());
         await r.destroy();
         logger.info('deleted movie');
-  
+
         logger.log('nb current database movies', await Movies.count());
       }
 
@@ -68,7 +68,7 @@ describe('connect interface', function () {
       logger.info('closed connections');
 
       logger.info('Done');
-    } catch(e) {
+    } catch (e) {
       await Storehouse.destroy();
       logger.info('closed connections');
       throw e;

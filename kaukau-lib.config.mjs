@@ -1,8 +1,10 @@
-module.exports = {
+import { defineConfig, defineParameters } from 'kaukau/config'
+
+export default defineConfig({
   enableLogs: true,
   exitOnFail: true,
-  files: 'test/src',
-  ext: '.test.ts',
+  files: 'test/lib',
+  ext: '.test.js',
   options: {
     bail: false,
     fullTrace: true,
@@ -15,7 +17,7 @@ module.exports = {
     ui: 'bdd',
     color: true,
   },
-  parameters: {
+  parameters: defineParameters({
     db: {
       dialect: process.env.TEST_DB_DIALECT || 'mysql',
       host: process.env.TEST_DB_HOSTNAME || 'localhost',
@@ -24,5 +26,5 @@ module.exports = {
       username: process.env.TEST_DB_USERNAME || 'root',
       password: process.env.TEST_DB_PASSWORD || ''
     }
-  },
-};
+  }),
+});
