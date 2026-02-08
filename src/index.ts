@@ -1,13 +1,14 @@
-import { HealthCheckResult, IManager, InvalidManagerConfigError, ManagerArg, ManagerNotFoundError, ModelNotFoundError, Registry } from '@storehouse/core';
-import {
-  Sequelize,
-  Model,
-  ModelAttributes,
-  ModelOptions,
-  Options,
-  ModelStatic
-} from 'sequelize';
 import Logger from '@novice1/logger';
+import {
+  HealthCheckResult,
+  IManager,
+  InvalidManagerConfigError,
+  ManagerArg,
+  ManagerNotFoundError,
+  ModelNotFoundError,
+  Registry,
+} from '@storehouse/core';
+import { Sequelize, Model, ModelAttributes, ModelOptions, Options, ModelStatic } from 'sequelize';
 
 const Log = Logger.debugger('@storehouse/sequelize');
 
@@ -49,7 +50,8 @@ export type AnyJsonObject = { [key: string]: any };
 export interface ModelSettings<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TModelAttributes extends AnyJsonObject = any,
-  TCreationAttributes extends AnyJsonObject = TModelAttributes> {
+  TCreationAttributes extends AnyJsonObject = TModelAttributes,
+> {
   /** The model attribute definitions */
   attributes: ModelAttributes<Model<TModelAttributes, TCreationAttributes>, TModelAttributes>;
   /** Optional pre-defined model class that extends Sequelize Model */
@@ -86,7 +88,7 @@ export interface SequelizeManagerSettings {
   /** Sequelize connection and configuration options */
   options?: Options;
   /** Array of model definitions to register with the Sequelize instance */
-  models?: ModelSettings[]
+  models?: ModelSettings[];
 }
 
 /**
@@ -157,18 +159,37 @@ export function getModel<M extends Model = Model>(registry: Registry, modelName:
  * const user = await User.findByPk(1);
  * ```
  */
-export function getModel<M extends Model = Model>(registry: Registry, managerName: string, modelName: string): ModelStatic<M>;
+export function getModel<M extends Model = Model>(
+  registry: Registry,
+  managerName: string,
+  modelName: string
+): ModelStatic<M>;
 export function getModel<M extends ModelStatic<Model> = ModelStatic<Model>>(registry: Registry, modelName: string): M;
-export function getModel<M extends ModelStatic<Model> = ModelStatic<Model>>(registry: Registry, managerName: string, modelName: string): M;
-export function getModel<TModelAttributes extends Record<string, unknown> = AnyJsonObject, TCreationAttributes extends Record<string, unknown> = AnyJsonObject>(registry: Registry, modelName: string): ModelStatic<Model<TModelAttributes, TCreationAttributes>>;
-export function getModel<TModelAttributes extends Record<string, unknown> = AnyJsonObject, TCreationAttributes extends Record<string, unknown> = AnyJsonObject>(registry: Registry, managerName: string, modelName: string): ModelStatic<Model<TModelAttributes, TCreationAttributes>>;
-export function getModel<M extends Model = Model>(registry: Registry, managerName: string, modelName?: string): ModelStatic<M> {
+export function getModel<M extends ModelStatic<Model> = ModelStatic<Model>>(
+  registry: Registry,
+  managerName: string,
+  modelName: string
+): M;
+export function getModel<
+  TModelAttributes extends Record<string, unknown> = AnyJsonObject,
+  TCreationAttributes extends Record<string, unknown> = AnyJsonObject,
+>(registry: Registry, modelName: string): ModelStatic<Model<TModelAttributes, TCreationAttributes>>;
+export function getModel<
+  TModelAttributes extends Record<string, unknown> = AnyJsonObject,
+  TCreationAttributes extends Record<string, unknown> = AnyJsonObject,
+>(
+  registry: Registry,
+  managerName: string,
+  modelName: string
+): ModelStatic<Model<TModelAttributes, TCreationAttributes>>;
+export function getModel<M extends Model = Model>(
+  registry: Registry,
+  managerName: string,
+  modelName?: string
+): ModelStatic<M> {
   const model = registry.getModel<ModelStatic<M>>(managerName, modelName);
   if (!model) {
-    throw new ModelNotFoundError(
-      modelName || managerName,
-      modelName ? managerName : undefined
-    );
+    throw new ModelNotFoundError(modelName || managerName, modelName ? managerName : undefined);
   }
   return model;
 }
@@ -345,31 +366,28 @@ export class SequelizeManager extends Sequelize implements IManager {
 
     if (settings.config?.options) {
       options = {
-        ...settings.config.options
+        ...settings.config.options,
       };
     }
 
     if (typeof options.logging === 'undefined') {
-      options.logging = msg => Log.debug(`[${this.name}]`, msg);
+      options.logging = (msg) => Log.debug(`[${this.name}]`, msg);
     }
 
     super(options);
 
     this.name = settings.name || `Sequelize ${Date.now()}_${Math.ceil(Math.random() * 10000) + 10}`;
 
-    settings.config?.models?.forEach(m => {
+    settings.config?.models?.forEach((m) => {
       if (m.model && m.model.init) {
         const options = {
           ...m.options,
-          sequelize: this
+          sequelize: this,
         };
         if (!options.modelName) {
           options.modelName = m.model.name;
         }
-        m.model.init(
-          m.attributes,
-          options
-        );
+        m.model.init(m.attributes, options);
       } else if (m.options?.modelName) {
         this.define(m.options.modelName, m.attributes, m.options);
       }
@@ -442,9 +460,12 @@ export class SequelizeManager extends Sequelize implements IManager {
    *
    * @returns The requested model class
    */
-  getModel<TModelAttributes extends Record<string, unknown> = AnyJsonObject, TCreationAttributes extends Record<string, unknown> = AnyJsonObject>(name: string): ModelStatic<Model<TModelAttributes, TCreationAttributes>>;
+  getModel<
+    TModelAttributes extends Record<string, unknown> = AnyJsonObject,
+    TCreationAttributes extends Record<string, unknown> = AnyJsonObject,
+  >(name: string): ModelStatic<Model<TModelAttributes, TCreationAttributes>>;
   getModel<M extends ModelStatic<Model> = ModelStatic<Model>>(name: string): M {
-    return <M>(this.model(name));
+    return this.model(name) as M;
   }
 
   /**
@@ -521,10 +542,10 @@ export class SequelizeManager extends Sequelize implements IManager {
           databaseVersion: await this.databaseVersion(),
           models,
           modelCount: models.length,
-          latency: `${latency}ms`
+          latency: `${latency}ms`,
         },
         latency,
-        timestamp
+        timestamp,
       };
     } catch (error) {
       return {
@@ -533,10 +554,10 @@ export class SequelizeManager extends Sequelize implements IManager {
         details: {
           name: this.name,
           dialect: this.getDialect(),
-          error: error instanceof Error ? error.stack : String(error)
+          error: error instanceof Error ? error.stack : String(error),
         },
         latency: Date.now() - start,
-        timestamp
+        timestamp,
       };
     }
   }
