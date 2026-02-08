@@ -53,7 +53,17 @@
   },
   "keywords": [
     "storehouse",
-    "sequelize"
+    "sequelize",
+    "mysql",
+    "mariadb",
+    "sqlite",
+    "postgres",
+    "mssql",
+    "sql",
+    "oracle",
+    "orm",
+    "database",
+    "db"
   ],
   "author": "demingongo",
   "license": "MIT",
